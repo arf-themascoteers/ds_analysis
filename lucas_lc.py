@@ -7,7 +7,7 @@ os.makedirs(output_folder, exist_ok=True)
 
 spectra_src_dir = f"{original_folder}/LUCAS2015_Soil_Spectra_EU28"
 topsoil_file = f"{original_folder}/LUCAS_Topsoil_2015_20200323.csv"
-output_file = f"{output_folder}/lucas.csv"
+output_file = f"{output_folder}/lucas_lc.csv"
 
 
 def link_them():
@@ -17,7 +17,7 @@ def link_them():
     while spec <= 2499.5:
         out.write(f"{spec},")
         spec = spec+0.5
-    out.write("oc")
+    out.write("lc")
     out.write("\n")
     done = []
 
@@ -55,7 +55,7 @@ def link_them():
                 val = str(val)
                 out.write(f"{row[val]},")
                 spec = spec + 0.5
-            out.write(f"{topsoil_row['OC']}")
+            out.write(f"{topsoil_row['LC1_Desc']}")
             out.write("\n")
             done.append(point_id)
             if len(done)%1000 == 0:
