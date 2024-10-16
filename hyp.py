@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io as sio
 import pandas as pd
+import os
 
 
 def dump(X_file,gt_file,dump_file,X_key,gt_key):
@@ -21,6 +22,8 @@ def dump(X_file,gt_file,dump_file,X_key,gt_key):
 original_folder = "data/original/hyp"
 output_folder = "data/output/hyp"
 
-dump(f"{original_folder}/Indian_pines_corrected.mat", f"{original_folder}/Indian_pines_gt.mat", f"{output_folder}indian_pines.csv",'indian_pines_corrected','indian_pines_gt')
-dump(f"{original_folder}/PaviaU.mat", f"{original_folder}/PaviaU_gt.mat", f"{output_folder}paviaU.csv",'paviaU','paviaU_gt')
-dump(f"{original_folder}/Salinas_corrected.mat", f"{original_folder}/Salinas_gt.mat", f"{output_folder}salinas.csv",'salinas_corrected','salinas_gt')
+os.makedirs(output_folder, exist_ok=True)
+
+dump(f"{original_folder}/Indian_pines_corrected.mat", f"{original_folder}/Indian_pines_gt.mat", f"{output_folder}/indian_pines.csv",'indian_pines_corrected','indian_pines_gt')
+dump(f"{original_folder}/PaviaU.mat", f"{original_folder}/PaviaU_gt.mat", f"{output_folder}/paviaU.csv",'paviaU','paviaU_gt')
+dump(f"{original_folder}/Salinas_corrected.mat", f"{original_folder}/Salinas_gt.mat", f"{output_folder}/salinas.csv",'salinas_corrected','salinas_gt')
