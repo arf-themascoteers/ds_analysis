@@ -53,7 +53,7 @@ def link_them():
                 if int(val) == val:
                     val = int(val)
                 val = str(val)
-                out.write(f",{row[val]}")
+                out.write(f"{row[val]},")
                 spec = spec + 0.5
             out.write("\n")
             done.append(point_id)
