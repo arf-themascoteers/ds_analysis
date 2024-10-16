@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 
 original_folder = "data/original/lucas"
 output_folder = "data/output/lucas"
@@ -8,6 +9,7 @@ os.makedirs(output_folder, exist_ok=True)
 spectra_src_dir = f"{original_folder}/LUCAS2015_Soil_Spectra_EU28"
 topsoil_file = f"{original_folder}/LUCAS_Topsoil_2015_20200323.csv"
 output_file = f"{output_folder}/lucas.csv"
+output_reflectance_file = f"{output_folder}/lucas_r.csv"
 
 
 def link_them():
@@ -65,8 +67,14 @@ def link_them():
     print("done")
 
 
-def check():
+def to_reflectance():
     df = pd.read_csv(output_file)
+    df.iloc[:, 0:-1] = np.round(1 / (10 ** df.iloc[:, 0:-1]), 5)
+    df.to_csv(output_reflectance_file, index=False)
+
+
+def check(f):
+    df = pd.read_csv(f)
     has_nan = df.isnull().values.any()
     non_numeric = df.apply(lambda x: pd.to_numeric(x, errors='coerce')).isnull().values.any()
     print(has_nan)
@@ -74,4 +82,6 @@ def check():
 
 
 link_them()
-check()
+check(output_file)
+to_reflectance()
+check(output_reflectance_file)
