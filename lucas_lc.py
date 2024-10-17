@@ -11,6 +11,9 @@ topsoil_file = f"{original_folder}/LUCAS_Topsoil_2015_20200323.csv"
 output_file = f"{output_folder}/lucas_lc.csv"
 output_reflectance_file = f"{output_folder}/lucas_lc_r.csv"
 
+output_shorter_file = f"{output_folder}/lucas_lc_s.csv"
+output_shorter_reflectance_file = f"{output_folder}/lucas_lc_s_r.csv"
+
 
 def link_them():
     topsoil_df = pd.read_csv(topsoil_file)
@@ -67,10 +70,10 @@ def link_them():
     print("done")
 
 
-def to_reflectance():
-    df = pd.read_csv(output_file)
+def to_reflectance(f,d):
+    df = pd.read_csv(f)
     df.iloc[:, 0:-1] = np.round(1 / (10 ** df.iloc[:, 0:-1]), 5)
-    df.to_csv(output_reflectance_file, index=False)
+    df.to_csv(d, index=False)
 
 
 def check(f):
@@ -81,7 +84,17 @@ def check(f):
     print(non_numeric)
 
 
+def shorten():
+    df = pd.read_csv(output_file)
+    filtered_df = df.groupby('lc').filter(lambda x: len(x) > 1000)
+    filtered_df.to_csv(output_shorter_file, index=False)
+
+
 link_them()
 check(output_file)
-to_reflectance()
+to_reflectance(output_file,output_reflectance_file)
 check(output_reflectance_file)
+
+shorten()
+to_reflectance(output_shorter_file,output_reflectance_file)
+check(output_shorter_reflectance_file)
