@@ -96,5 +96,5 @@ to_reflectance(output_file,output_reflectance_file)
 check(output_reflectance_file)
 
 shorten()
-to_reflectance(output_shorter_file,output_reflectance_file)
+to_reflectance(output_shorter_file,output_shorter_reflectance_file)
 check(output_shorter_reflectance_file)
