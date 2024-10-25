@@ -24,6 +24,7 @@ def create_texture():
         df.loc[index, 'texture'] = getTexture(df.loc[index, 'Sand'], df.loc[index, 'Clay'], classification='USDA')
 
     df = df[["Point_ID", "texture"]]
+    df = df[df['texture'].notna()]
     df.to_csv(intermediate_file, index=False)
 
 
@@ -49,7 +50,7 @@ def link_them():
         for index, row in df_grouped.iterrows():
             empties = row.isna().sum()
             if empties != 0:
-                print(file, row["PointID"])
+                #print(file, row["PointID"])
                 continue
 
             point_id = row['PointID']
@@ -58,7 +59,7 @@ def link_them():
                 continue
             rows = (topsoil_df.loc[topsoil_df['Point_ID'] == point_id])
             if len(rows) == 0:
-                print(point_id)
+                #print(point_id)
                 continue
             if len(rows) > 1:
                 print(f"Multiple {point_id}")
