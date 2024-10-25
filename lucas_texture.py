@@ -1,28 +1,40 @@
 import os
 import pandas as pd
 import numpy as np
+from soiltexture import getTexture
 
 original_folder = "data/original/lucas"
 output_folder = "data/output/lucas"
 os.makedirs(output_folder, exist_ok=True)
 
 spectra_src_dir = f"{original_folder}/LUCAS2015_Soil_Spectra_EU28"
-topsoil_file = f"{original_folder}/lucas_shp.csv"
-output_file = f"{output_folder}/lucas_lc0.csv"
-output_reflectance_file = f"{output_folder}/lucas_lc0_r.csv"
+topsoil_file = f"{original_folder}/LUCAS_Topsoil_2015_20200323.csv"
+output_file = f"{output_folder}/lucas_texture.csv"
+output_reflectance_file = f"{output_folder}/lucas_texture_r.csv"
 
-output_shorter_file = f"{output_folder}/lucas_lc0_s.csv"
-output_shorter_reflectance_file = f"{output_folder}/lucas_lc0_s_r.csv"
+intermediate_file = "data/intermediate/lucas/texture.csv"
+os.makedirs("data/intermediate/lucas", exist_ok=True)
+
+
+def create_texture():
+    df = pd.read_csv(topsoil_file)
+    df = df[df['Clay'].notna() & (df['Clay'] != '')].copy()
+
+    for index in df.index:
+        df.loc[index, 'texture'] = getTexture(df.loc[index, 'Sand'], df.loc[index, 'Clay'], classification='USDA')
+
+    df = df[["Point_ID", "texture"]]
+    df.to_csv(intermediate_file, index=False)
 
 
 def link_them():
-    topsoil_df = pd.read_csv(topsoil_file)
+    topsoil_df = pd.read_csv(intermediate_file)
     out = open(output_file, "w")
     spec = 400
     while spec <= 2499.5:
         out.write(f"{spec},")
         spec = spec+0.5
-    out.write("lc")
+    out.write("texture")
     out.write("\n")
     done = []
 
@@ -60,7 +72,7 @@ def link_them():
                 val = str(val)
                 out.write(f"{row[val]},")
                 spec = spec + 0.5
-            out.write(f"{topsoil_row['LC0_Desc']}")
+            out.write(f"{topsoil_row['texture']}")
             out.write("\n")
             done.append(point_id)
             if len(done)%1000 == 0:
@@ -84,17 +96,8 @@ def check(f):
     print(non_numeric)
 
 
-def shorten():
-    df = pd.read_csv(output_file)
-    filtered_df = df.groupby('lc').filter(lambda x: len(x) > 550)
-    filtered_df.to_csv(output_shorter_file, index=False)
-
-
+create_texture()
 link_them()
 check(output_file)
 to_reflectance(output_file,output_reflectance_file)
 check(output_reflectance_file)
-
-shorten()
-to_reflectance(output_shorter_file,output_shorter_reflectance_file)
-check(output_shorter_reflectance_file)
