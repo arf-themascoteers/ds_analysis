@@ -3,7 +3,7 @@ import os
 
 original_file = "data/original/ghisaconus/GHISACONUS_2008_001_speclib.csv"
 intermediate_file_1 = "data/intermediate/ghisaconus_health/1.csv"
-output_file = "data/output/ghisaconus_health/ghisaconus.csv"
+output_file = "data/output/ghisaconus_health/ghisaconus_health.csv"
 
 
 def create_intermediate_file():
@@ -19,7 +19,7 @@ def sanitize():
     os.makedirs('data/output/ghisaconus_health', exist_ok=True)
     df = pd.read_csv(intermediate_file_1)
     cols = [col for col in df.columns if col.startswith('X') and not df[col].isna().all()]
-    df_filtered = df[cols + ['Crop']].rename(columns={'Stage': 'health'})
+    df_filtered = df[cols + ['Stage']].rename(columns={'Stage': 'health'})
     nan_count = df_filtered.isna().any(axis=1).sum()
     print(nan_count)
     df_filtered = df_filtered.dropna()
