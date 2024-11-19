@@ -1,15 +1,21 @@
 import os
 import pandas as pd
 import numpy as np
+import geopandas as gpd
 
-original_folder = "data/original/lucas"
 output_folder = "data/output/lucas_crop"
 os.makedirs(output_folder, exist_ok=True)
 
-spectra_src_dir = f"{original_folder}/LUCAS2015_Soil_Spectra_EU28"
-topsoil_file = f"{original_folder}/lucas_shp.csv"
+spectra_src_dir = f"data/original/lucas/LUCAS2015_Soil_Spectra_EU28"
+topsoil_file = f"{output_folder}/shp.csv"
 output_file = f"{output_folder}/lucas_crop_a.csv"
 output_reflectance_file = f"{output_folder}/lucas_crop.csv"
+
+
+def convert_shp_to_csv():
+    shapefile = gpd.read_file(
+        r"D:\Data\LUCAS\Lucas-2015\LUCAS2015_topsoildata_20200323\LUCAS_Topsoil_2015_20200323-shapefile\LUCAS_Topsoil_2015_20200323.shp")
+    shapefile.to_csv(topsoil_file, index=False)
 
 
 def link_them():
@@ -86,6 +92,7 @@ def check(f):
     print(non_numeric)
 
 
+convert_shp_to_csv()
 link_them()
 check(output_file)
 to_reflectance()
