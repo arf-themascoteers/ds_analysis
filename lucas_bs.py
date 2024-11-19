@@ -8,12 +8,13 @@ os.makedirs(output_folder, exist_ok=True)
 
 spectra_src_dir = f"{original_folder}/LUCAS2015_Soil_Spectra_EU28"
 topsoil_file = f"{original_folder}/lucas_shp.csv"
-output_file = f"{output_folder}/lucas.csv"
-output_reflectance_file = f"{output_folder}/lucas_r.csv"
+output_file = f"{output_folder}/lucas_crop.csv"
+output_reflectance_file = f"{output_folder}/lucas_crop_r.csv"
 
 
 def link_them():
     topsoil_df = pd.read_csv(topsoil_file)
+    topsoil_df = topsoil_df[topsoil_df['LC0_Desc'] == "Cropland"].reset_index(drop=True).copy()
     out = open(output_file, "w")
     spec = 400
     while spec <= 2499.5:
@@ -43,7 +44,7 @@ def link_them():
                 continue
             rows = (topsoil_df.loc[topsoil_df['Point_ID'] == point_id])
             if len(rows) == 0:
-                print(point_id)
+                #print(point_id)
                 continue
             if len(rows) > 1:
                 print(f"Multiple {point_id}")

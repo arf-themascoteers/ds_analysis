@@ -2,7 +2,7 @@ import pandas as pd
 
 
 #df = pd.read_csv("../data/output/lucas/shp.csv")
-df = pd.read_csv("../data/original/lucas/LUCAS_Topsoil_2015_20200323.csv")
+df = pd.read_csv("../data/original/lucas/lucas_shp.csv")
 print(df.columns)
 unique_values_with_counts = df['LC0_Desc'].value_counts()
 print(unique_values_with_counts)
