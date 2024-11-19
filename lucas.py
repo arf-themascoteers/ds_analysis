@@ -17,7 +17,11 @@ def link_them():
     out = open(output_file, "w")
     spec = 400
     while spec <= 2499.5:
-        out.write(f"{spec},")
+        val = spec
+        if int(val) == val:
+            val = int(val)
+        val = str(val)
+        out.write(f"{val},")
         spec = spec+0.5
     out.write("oc")
     out.write("\n")
